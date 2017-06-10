@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+    <div  style="padding-top: 150px"></div>
+    <div class="main main-raised">
+        <div class="container">
+            <div class="section section-landing">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        {% for item in queryset %}
+                            <a href="{{ item.get_absolute_url }}">{{ item }}</a> <br>
+                            
+                        {% endfor %}
+                        <!-- <p> {{ video_embed|safe }} </p> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
