@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from django.db.models.signals import post_save
 
 
 class MyUserManager(BaseUserManager):
@@ -93,6 +94,16 @@ class MyUser(AbstractBaseUser):
 	    "Is the user a member of staff?"
 	    # Simplest possible answer: All admins are staff
 	    return self.is_admin
+
+
+def new_user_reciever(sender, instance, created, *args, **kwargs):
+	if created:
+		new_profile, is_created = UserProfile.objects.get_or_create(user=instance)
+		print(new_profile, is_created)
+
+
+
+post_save.connect(new_user_reciever, sender=MyUser)
 
 
 class UserProfile(models.Model):

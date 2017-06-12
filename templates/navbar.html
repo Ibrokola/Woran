@@ -14,8 +14,13 @@
         <div class="collapse navbar-collapse" id="navigation-example">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="" target="_blank">
+                    <a href="">
                         Free Videos
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'category_list' %}">
+                        Categories
                     </a>
                 </li>
                 <li>
@@ -23,7 +28,7 @@
                         <i class="material-icons">unarchive</i> Upgrade your account
                     </a>
                 </li>
-                <li>
+<!--                 <li>
                     <a href="" target="_blank" class="btn btn-simple btn-white btn-just-icon">
                         <i class="fa fa-twitter"></i>
                     </a>
@@ -37,7 +42,30 @@
                     <a href="" target="_blank" class="btn btn-simple btn-white btn-just-icon">
                         <i class="fa fa-instagram"></i>
                     </a>
+                </li> -->
+                {% if request.user.is_authenticated %}
+                <li>
+                    <a href="">
+                        {{ user }}
+                    </a>
                 </li>
+                 <li>
+                    <a href="{% url 'account_logout' %}">
+                        Logout
+                    </a>
+                </li>
+                {% else %}
+                 <li>
+                    <a href="{% url 'account_login' %}">
+                        Login
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'account_signup' %}">
+                        Register
+                    </a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>

@@ -9,7 +9,9 @@
             <div class="section text-center section-landing">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
-                        {{ queryset }}
+                        {% for item in queryset %}
+                        <a href="{{ item.get_absolute_url }}">{{ item }}</a><br>
+                        {% endfor %}
                         <!-- <p> {{ video_embed|safe }} </p> -->
                     </div>
                 </div>

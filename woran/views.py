@@ -25,6 +25,7 @@ def home(request):
 		new_user.email = email
 		new_user.set_password(password)
 		new_user.save()
+		return redirect('account_login')
 
 	# login_form = LoginForm()
 	# form = RegisterForm()
