@@ -2,6 +2,14 @@
 
 {% block title %}{% endblock %}
 
+<style>
+{% block style %}
+.reply_comment{
+    display: none;
+}
+{% endblock %}
+</style>
+
 <script>
 {% block jquery %}
 function update_iframe_size(){
@@ -30,6 +38,13 @@ $(window).bind("resize", function(){
     update_iframe_size();
 });
 
+$('.reply_btn').click(function(e){
+    e.preventDefault();
+    $(this).next(".reply_comment").fadeToggle();
+    // $(".reply_comment").fadeToggle();
+
+})
+
 {% endblock %}
 </script>
 
@@ -48,6 +63,44 @@ $(window).bind("resize", function(){
                         <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ obj.get_share_link }}&title={{ obj.get_share_message|safe }}&summary={{ obj.get_share_message|safe }}&source={{ obj.get_share_link }}"><i class="fa fa-linkedin-square fa-3x" aria-hidden="true"></i></a>
                         <!-- {{ obj.get_share_message|safe }}     -->
                             <!-- <p> {{ video_embed|safe }} </p> -->
+                    <br>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                        <h2>Comments</h2>
+                        <form method="POST" action=""> {% csrf_token %}
+                        {{ comment_form.as_p }}
+                        <input class="btn btn-primary" type="submit" value="Add comment">    
+                        </form>
+                        <br>
+                        <br>
+                        <table class="table">
+                            {% for comment in comments %}
+                                <tr>
+                                    <td>{{ comment.get_comment }} 
+                                    <br> 
+                                    <small>by {{ comment.user }} | {{ comment.timestamp| timesince }} ago</small>
+                                    {% if not comment.is_child %}
+                                        <ul>
+                                            {% for child in comment.get_children %}
+                                                <li>{{ child.get_comment }} <small>by {{ child.user }} | {{ child.timestamp| timesince  }} ago</small></li>
+                                            {% endfor %}
+                                        </ul>
+                                        <a href="#" class="reply_btn">Reply</a> | <a href="{{ comment.get_absolute_url }}">View Thread</a>
+                                        <div class="reply_comment">
+                                            <form method="POST" action=""> {% csrf_token %}
+                                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                                {{ comment_form.as_p }}
+                                                <input class="btn btn-primary" type="submit" value="Add reply">    
+                                            </form>
+                                        </div>
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

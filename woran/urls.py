@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 
 from .views import home
 from videos.views import video_detail, category_list, category_detail
-
+from comments.views import comment_thread
 
 
 
@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^videos/$', category_list, name='category_list'),
     url(r'^videos/(?P<cat_slug>[\w-]+)/$', category_detail, name='category_detail'),
     url(r'^videos/(?P<cat_slug>[\w-]+)/(?P<vid_slug>[\w-]+)/$', video_detail, name='video_detail'),
+    url(r'^comment/(?P<id>\d+)/$', comment_thread, name='comment_thread'),
     url(r'^accounts/', include('allauth.urls')),
 ]
 

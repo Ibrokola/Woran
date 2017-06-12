@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<div  style="padding-top: 150px"></div>
+<div class="main main-raised">
+	<div class="container">
+	<a href="{{ comment.get_origin }}">Back</a>
+		<table class="table">
+			<tr>
+			    <td>{{ comment.get_comment }} 
+			    <br> 
+			    <small>by {{ comment.user }} | {{ comment.timestamp| timesince }} ago</small>
+				    {% if not comment.is_child %}
+				        <ul>
+				            {% for child in comment.get_children %}
+				                <li>{{ child.get_comment }} <small>by {{ child.user }} | {{ child.timestamp| timesince  }} ago</small></li>
+				            {% endfor %}
+				        </ul>
+				            <form method="POST" action=""> {% csrf_token %}
+				                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+				                {{ form.as_p }}
+				                <input class="btn btn-primary" type="submit" value="Add reply">    
+				            </form>
+				    {% endif %}
+			    </td>
+			</tr>
+		</table>
+	</div>
+</div>
+{% endblock %}
