@@ -15,10 +15,10 @@
 				    {% if not comment.is_child %}
 				        <ul>
 				            {% for child in comment.get_children %}
-				                <li>{{ child.get_comment }} <small>by {{ child.user }} | {{ child.timestamp| timesince  }} ago</small></li>
+				                <p>{{ child.get_comment }} <small>by {{ child.user }} | {{ child.timestamp| timesince  }} ago</small></p>
 				            {% endfor %}
 				        </ul>
-				            <form method="POST" action=""> {% csrf_token %}
+				            <form method="POST" action="{% url 'comment_create' %}"> {% csrf_token %}
 				                <input type="hidden" name="parent_id" value="{{ comment.id }}">
 				                {{ form.as_p }}
 				                <input class="btn btn-primary" type="submit" value="Add reply">    

@@ -23,7 +23,7 @@
     <link href="{% static 'css/demo.css' %}" rel="stylesheet"/>
 
     <style>{% block style %}{% endblock %}</style>
-    
+
 </head>
 
 <body class="landing-page">
@@ -31,6 +31,24 @@
     {% include 'navbar.html' %}
 
     <div class="wrapper">
+        <div class="container">
+            {% if messages %}
+            <div class="messages" style="padding-top: 120px;">
+            <!-- <div class="alert alert-success"> -->
+                {% for message in messages %}
+                    <div class="container-fluid">
+                        <div class="alert {% if 'error' in message.tags %}alert-warning{%else%}alert-success{% endif %}" role="alert">{{ message }} - {{ user }}</div>
+                          <!--   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                            </button> -->
+                    </div>
+                {% endfor %}
+            <!-- </div> -->
+            </div>
+            {% endif %}
+        </div>
+
+
         <!-- <div style="min-height: 950px;"></div> -->
         <main style="min-height: 950px;">{% block content %}{% endblock %}</main>
 
@@ -61,7 +79,7 @@
                     </ul>
                 </nav>
                 <div class="copyright pull-right">
-                    &copy; 2017, created by <a href="www.ibrokolawole.com" style="text-decoration: none;">ibrokola</a>
+                    &copy; 2017, created by ibrokola
                 </div>
             </div>
         </footer>

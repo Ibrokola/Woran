@@ -20,35 +20,13 @@ def video_detail(request, cat_slug, vid_slug):
 		comments = obj.comment_set.all()
 		# comments = Comment.objects.filter(video=obj)
 		template = "videos/video_detail.html"
-		comment_form = CommentForm(request.POST or None)
+		comment_form = CommentForm()
 		context = {
 			"obj": obj,
 			"comments": comments,
-			# "comment_form": comment_form,
+			"comment_form": comment_form,
 		}
-		if comment_form.is_valid():
-			parent_id = request.POST.get('parent_id')
-			parent_comment = None
-			if parent_id is not None:
-				try:
-					parent_comment = Comment.objects.get(id=parent_id)
-				except:
-					parent_comment = None
-
-
-			comment_text = comment_form.cleaned_data['comment']
-			new_comment = Comment.objects.create_comment(
-						user=request.user,
-						path=request.get_full_path(),
-						text=comment_text,
-						video=obj,
-						parent=parent_comment,
-					)
-			# print(new_comment.text)
-			return HttpResponseRedirect(obj.get_absolute_url())
-			# return render(request, template, context)
-		
-		return render(request, template, {"obj": obj, "comments": comments, "comment_form": comment_form})
+		return render(request, template, context)
 	except:
 		raise Http404
 

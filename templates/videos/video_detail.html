@@ -10,6 +10,7 @@
 {% endblock %}
 </style>
 
+
 <script>
 {% block jquery %}
 function update_iframe_size(){
@@ -68,7 +69,9 @@ $('.reply_btn').click(function(e){
                     <div class="row">
                         <div class="col-md-12">
                         <h2>Comments</h2>
-                        <form method="POST" action=""> {% csrf_token %}
+                        <form method="POST" action="{% url 'comment_create' %}"> {% csrf_token %}
+                        <input type="hidden" name="video_id" value="{{ obj.id }}">
+                        <input type="hidden" name="origin_path" value="{{ request.get_full_path }}">
                         {{ comment_form.as_p }}
                         <input class="btn btn-primary" type="submit" value="Add comment">    
                         </form>
@@ -83,12 +86,14 @@ $('.reply_btn').click(function(e){
                                     {% if not comment.is_child %}
                                         <ul>
                                             {% for child in comment.get_children %}
-                                                <li>{{ child.get_comment }} <small>by {{ child.user }} | {{ child.timestamp| timesince  }} ago</small></li>
+                                                <p>{{ child.get_comment }} <small>by {{ child.user }} | {{ child.timestamp| timesince  }} ago</small></p>
                                             {% endfor %}
                                         </ul>
-                                        <a href="#" class="reply_btn">Reply</a> | <a href="{{ comment.get_absolute_url }}">View Thread</a>
+                                        <a href="{{ comment.get_absolute_url }}">View Thread</a> | <a href="#" class="reply_btn">Reply</a> 
                                         <div class="reply_comment">
-                                            <form method="POST" action=""> {% csrf_token %}
+                                            <form method="POST" action="{% url 'comment_create' %}"> {% csrf_token %}
+                                                <input type="hidden" name="video_id" value="{% url 'comment_create' %}">
+                                                <input type="hidden" name="origin_path" value="{{ comment.get_origin }}">
                                                 <input type="hidden" name="parent_id" value="{{ comment.id }}">
                                                 {{ comment_form.as_p }}
                                                 <input class="btn btn-primary" type="submit" value="Add reply">    
