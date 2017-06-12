@@ -1,5 +1,10 @@
+import urllib.parse
 from django.db import models
+from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.utils.text import slugify
+
 
 
 
@@ -23,12 +28,16 @@ class VideoManager(models.Manager):
 	def all(self):
 		return self.get_queryset().active()
 
+DEFAULT_MESSAGE = "check out this video"
+
 
 class Video(models.Model):
 	title = models.CharField(max_length=120)
 	embed_code = models.CharField(max_length=500, null=True, blank=True)
+	share_message = models.TextField(default=DEFAULT_MESSAGE)
 	active = models.BooleanField(default=True)
 	featured = models.BooleanField(default=False)
+	slug = models.SlugField(blank=True, null=True)
 	free_preview = models.BooleanField(default=False)
 	category = models.ForeignKey("Category", default=1)
 	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
@@ -36,13 +45,52 @@ class Video(models.Model):
 
 	objects = VideoManager()
 
+	class Meta:
+		unique_together = ('slug', 'category')
+
 
 	def __str__(self):
 		return self.title
 
+
 	def get_absolute_url(self):
-		return reverse('video_detail', kwargs={"id": self.id, "cat_slug": self.category.slug})
+		return reverse('video_detail', kwargs={"vid_slug": self.slug, "cat_slug": self.category.slug})
+
+
+	def get_share_message(self):
+		full_url = "%s%s" %(settings.FULL_DOMAIN_NAME, self.get_absolute_url())
+		return urllib.parse.quote("%s %s" %(self.share_message, full_url))
+
+	def share_link(self):
+		full_url = "%s%s" %(settings.FULL_DOMAIN_NAME, self.get_absolute_url())
+		return full_url
+
+
+
+def video_post_save_reciever(sender, instance, created, *args, **kwargs):
+	print('signal sent')
+	if created:
+		slug_title = slugify(instance.title)
+		new_slug = "%s %s %s" %(instance.title, instance.category.slug, instance.id)
+		try: 
+			obj_exists = Video.objects.get(slug=slug_title, category=instance.category)
+			instance.slug = slugify(new_slug)
+			instance.save()
+			print('model exists, new slug generated')
+		except Video.DoesNotExist:
+			instance.slug = slug_title
+			instance.save()
+			print('slug and model created')
+		except Video.MultipleObjectsReturned:
+			instance.slug = slugify(new_slug)
+			instance.save()
+			print('multiple models exists, new slug generated')
+		except:
+			pass
 		
+post_save.connect(video_post_save_reciever, sender=Video)
+
+
 
 class Category(models.Model):
 	title = models.CharField(max_length=120)

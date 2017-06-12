@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^$', home, name='home'),
     url(r'^videos/$', category_list, name='category_list'),
     url(r'^videos/(?P<cat_slug>[\w-]+)/$', category_detail, name='category_detail'),
-    url(r'^videos/(?P<cat_slug>[\w-]+)/(?P<id>\d+)/$', video_detail, name='video_detail'),
+    url(r'^videos/(?P<cat_slug>[\w-]+)/(?P<vid_slug>[\w-]+)/$', video_detail, name='video_detail'),
     url(r'^accounts/', include('allauth.urls')),
 ]
 

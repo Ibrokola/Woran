@@ -2,14 +2,52 @@
 
 {% block title %}{% endblock %}
 
+<script>
+{% block jquery %}
+function update_iframe_size(){
+
+    var parent_id = $("iframe").parent().attr("id");
+    if (parent_id == "main_video"){
+        var parent_class = $("iframe").parent().attr("class");
+        var parent_width = $("iframe").parent().width();
+        console.log(parent_class)
+        var width = $("iframe").css("width");
+        var height = $("iframe").css("height");
+        var ratio = parseInt(height)/parseInt(width);
+        var new_height = parseInt(parent_width) *ratio
+
+        $("iframe").css("width", parent_width);
+        $("iframe").css("height", new_height);
+
+        console.log(width);
+        console.log(height);
+    }
+}
+
+update_iframe_size();
+
+$(window).bind("resize", function(){
+    update_iframe_size();
+});
+
+{% endblock %}
+</script>
+
 {% block content %}
     <div  style="padding-top: 150px"></div>
     <div class="main main-raised">
         <div class="container">
-            <div class="section text-center">
+            <div class="section">
                 <div class="row">
-                    {{ obj.embed_code|safe }}    
-                        <!-- <p> {{ video_embed|safe }} </p> -->
+                    <div class="col-md-12" id="main_video">
+                        {{ obj.embed_code|safe }}
+                    </div>
+                        <br>
+                        <a target="_blank" href="https://twitter.com/home?status={{ obj.get_share_message|safe }}"><i class="fa fa-twitter-square fa-3x" aria-hidden="true"></i></a>
+                        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ obj.get_share_link }}"><i class="fa fa-facebook-square fa-3x" aria-hidden="true"></i></a>
+                        <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ obj.get_share_link }}&title={{ obj.get_share_message|safe }}&summary={{ obj.get_share_message|safe }}&source={{ obj.get_share_link }}"><i class="fa fa-linkedin-square fa-3x" aria-hidden="true"></i></a>
+                        <!-- {{ obj.get_share_message|safe }}     -->
+                            <!-- <p> {{ video_embed|safe }} </p> -->
                 </div>
             </div>
         </div>
