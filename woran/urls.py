@@ -10,7 +10,7 @@ from django.conf.urls.static import static
 from .views import home
 from videos.views import video_detail, category_list, category_detail
 from comments.views import comment_thread, comment_create_view
-
+from notifications.views import all, read, get_notifications_ajax
 
 
 
@@ -21,8 +21,11 @@ urlpatterns = [
     url(r'^videos/$', category_list, name='category_list'),
     url(r'^videos/(?P<cat_slug>[\w-]+)/$', category_detail, name='category_detail'),
     url(r'^videos/(?P<cat_slug>[\w-]+)/(?P<vid_slug>[\w-]+)/$', video_detail, name='video_detail'),
-    url(r'^comment/(?P<id>\d+)/$', comment_thread, name='comment_thread'),
     url(r'^comment/create/$', comment_create_view, name='comment_create'),
+    url(r'^comment/(?P<id>\d+)/$', comment_thread, name='comment_thread'),
+    url(r'^notifications/$', all, name='notifications_all'),
+    url(r'^notifications/ajax/$', get_notifications_ajax, name='notifications_ajax'),
+    url(r'^notifications/read/(?P<id>\d+)/$', read, name='notifications_read'),
     url(r'^accounts/', include('allauth.urls')),
 ]
 

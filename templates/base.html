@@ -108,5 +108,25 @@
             {% endblock %}
         });
     </script>
+    <script>
+        $(document).ready(function(){
+            $(".notification-toggle").click(function(e){
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'get_notifiactions_ajax' %}",
+                    data:{
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                    },
+                    success: function(data){
+                        console.log(data);
+                    },
+                    error: function(rs, e){
+                        console.log(data);
+                    }
+                })
+            })
+        })
+    </script>
 
 </html>
