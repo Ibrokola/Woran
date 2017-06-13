@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^comment/create/$', comment_create_view, name='comment_create'),
     url(r'^comment/(?P<id>\d+)/$', comment_thread, name='comment_thread'),
     url(r'^notifications/$', all, name='notifications_all'),
-    url(r'^notifications/ajax/$', get_notifications_ajax, name='notifications_ajax'),
+    url(r'^notifications/ajax/$', get_notifications_ajax, name='get_notifications_ajax'),
     url(r'^notifications/read/(?P<id>\d+)/$', read, name='notifications_read'),
     url(r'^accounts/', include('allauth.urls')),
 ]

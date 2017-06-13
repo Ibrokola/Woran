@@ -34,11 +34,20 @@ def read(request, id):
 
 @login_required
 def get_notifications_ajax(request):
-	data = {
-		"item1": "item 1",
-		"item2": True,
-	}
-	print(data)
-	json_data = json.dumps(data)
-	print(json_data)
-	return HttpResponse(json_data, content_type='application/json')
+	if request.is_ajax() and request.method == "POST":
+		notifications = Notification.objects.all_for_user(request.user).recent()
+		count = notifications.count()
+		notes = []
+		for note in notifications:
+			notes.append(str(note.get_link))
+
+		data = {
+			"notifications": notes,
+			"count": count,
+		}
+		print(data)
+		json_data = json.dumps(data)
+		print(json_data)
+		return HttpResponse(json_data, content_type='application/json')
+	else:
+		raise Http404
