@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'analytics',
     'billing',
     'comments',
-    'notification',
+    'notifications',
     'accounts',
 ]
 
@@ -60,6 +60,8 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_EMAIL_VERIFICATION = ACCOUNT_EMAIL_VERIFICATION
 # LOGIN_REDIRECT_URL = '/'
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 AUTH_USER_MODEL = 'accounts.MyUser'
 

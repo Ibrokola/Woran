@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}{% endblock %}
 
 <style>
@@ -58,6 +60,15 @@ $('.reply_btn').click(function(e){
                     <div class="col-md-12" id="main_video">
                         {{ obj.embed_code|safe }}
                     </div>
+                    {% if obj.tags %}
+                    <div class="col-sm-12">
+                        {% for tag in obj.tags.all %}
+                        <ul>
+                            <li>{{ tag }}</li>
+                        </ul>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                         <br>
                         <a target="_blank" href="https://twitter.com/home?status={{ obj.get_share_message|safe }}"><i class="fa fa-twitter-square fa-3x" aria-hidden="true"></i></a>
                         <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ obj.get_share_link }}"><i class="fa fa-facebook-square fa-3x" aria-hidden="true"></i></a>
@@ -72,8 +83,8 @@ $('.reply_btn').click(function(e){
                         <form method="POST" action="{% url 'comment_create' %}"> {% csrf_token %}
                         <input type="hidden" name="video_id" value="{{ obj.id }}">
                         <input type="hidden" name="origin_path" value="{{ request.get_full_path }}">
-                        {{ comment_form.as_p }}
-                        <input class="btn btn-primary" type="submit" value="Add comment">    
+                        {% crispy comment_form comment_form.helper %}
+                        <!-- <input class="btn btn-primary" type="submit" value="Add comment">     -->
                         </form>
                         <br>
                         <br>
@@ -95,8 +106,8 @@ $('.reply_btn').click(function(e){
                                                 <input type="hidden" name="video_id" value="{% url 'comment_create' %}">
                                                 <input type="hidden" name="origin_path" value="{{ comment.get_origin }}">
                                                 <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                                                {{ comment_form.as_p }}
-                                                <input class="btn btn-primary" type="submit" value="Add reply">    
+                                                {% crispy comment_form comment_form.helper %}
+                                                <!-- <input class="btn btn-primary" type="submit" value="Add reply">     -->
                                             </form>
                                         </div>
                                     {% endif %}

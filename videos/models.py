@@ -3,6 +3,9 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
+
 from django.utils.text import slugify
 
 
@@ -35,6 +38,7 @@ class Video(models.Model):
 	title = models.CharField(max_length=120)
 	embed_code = models.CharField(max_length=500, null=True, blank=True)
 	share_message = models.TextField(default=DEFAULT_MESSAGE)
+	tags = GenericRelation("TaggedItem", null=True, blank=True)
 	active = models.BooleanField(default=True)
 	featured = models.BooleanField(default=False)
 	slug = models.SlugField(blank=True, null=True)
@@ -95,6 +99,7 @@ post_save.connect(video_post_save_reciever, sender=Video)
 class Category(models.Model):
 	title = models.CharField(max_length=120)
 	description = models.TextField(max_length=5000, null=True, blank=True)
+	tags = GenericRelation("TaggedItem", null=True, blank=True)
 	image = models.ImageField(upload_to='images/', null=True, blank=True)
 	slug = models.SlugField(default='abc', unique=True)
 	active = models.BooleanField(default=True)
@@ -109,3 +114,21 @@ class Category(models.Model):
 	def get_absolute_url(self):
 		return reverse('category_detail', kwargs={"cat_slug": self.slug})
 		
+
+TAG_CHOICES = (
+		("python", "python"),
+		("nollywood", "nollywood"),
+		("music", "music"),
+		("entertainment", "entertainment"),
+	)
+
+
+
+class TaggedItem(models.Model):
+	tag = models.SlugField(choices=TAG_CHOICES)
+	content_type = models.ForeignKey(ContentType)
+	object_id = models.PositiveIntegerField()
+	content_object = GenericForeignKey()
+
+	def __str__(self):
+		return self.tag 
