@@ -75,6 +75,13 @@ $('.reply_btn').click(function(e){
                         <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ obj.get_share_link }}&title={{ obj.get_share_message|safe }}&summary={{ obj.get_share_message|safe }}&source={{ obj.get_share_link }}"><i class="fa fa-linkedin-square fa-3x" aria-hidden="true"></i></a>
                         <!-- {{ obj.get_share_message|safe }}     -->
                             <!-- <p> {{ video_embed|safe }} </p> -->
+                    {% if obj.get_previous_url %}
+                    <a href="{{ obj.get_previous_url }}">Prev</a>
+                    {% endif %}
+                    {% if obj.get_next_url %}
+                    <a href="{{ obj.get_next_url }}">Next</a>
+                    {% endif %}
+
                     <br>
                     <hr>
                     <div class="row">

@@ -4,6 +4,8 @@
 
 {% load i18n %}
 
+{% load crispy_forms_tags %}
+
 {% load account socialaccount %}
 
 {% block content %}
@@ -20,8 +22,50 @@
                     </a>
                 </div>
                 <div class="col-md-6">
-                    <div class="col-md-12">
-                        {% include "account/signup_and_login.html" %}
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1 col-xl-6 col-xl-offset-0">
+                              <!-- Nav tabs -->
+                
+                              <ul class="nav nav-tabs justify-content-center" role="tablist">
+                                <li role="presentation" class="active"><a href="#register" aria-controls="register" role="tab" data-toggle="tab">Register</a></li>
+                                <li role="presentation"><a href="#login" aria-controls="login" role="tab" data-toggle="tab">Login</a></li>
+                              </ul>
+
+                              <!-- Tab panes -->
+                              <div class="card-block">
+                              <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="register">
+                                    <br>
+                                    <div class="panel panel-default">
+                                    {# load socialaccount #}
+                                      <div class="panel-body">
+                                        <a href="{# provider_login_url 'facebook' method='oauth2' #}" class='btn-floating btn-lg btn-fb'><i class="fa fa-facebook"></i></a>
+                                        <a href="{# provider_login_url 'twitter' #}" class='btn-floating btn-small btn-tw'><i class="fa fa-twitter"></i></a>
+                                        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">{% csrf_token %}
+                                        {{ signup_form|crispy }}
+                                        <input type="submit" class="btn btn-primary btn-block" value='Get free account'>
+                                        </form>
+                                      </div>
+                                    </div>      
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="login">
+                                <br>
+                                    <div class="panel panel-default">
+                                      <div class="panel-body">
+                                      {# load socialaccount #}
+                                        <a href="{# provider_login_url 'facebook' method='oauth2' #}" class='btn-floating btn-small btn-fb'><i class="fa fa-facebook"></i></a>
+                                        <a href="{# provider_login_url 'twitter' #}" class='btn-floating btn-small btn-tw'><i class="fa fa-twitter"></i></a>
+                                        <form class="signup" id="signup_form" method="post" action="{% url 'account_login' %}">{% csrf_token %}
+                                            {{ login_form|crispy }}
+                                            <input type="submit" class="btn btn-primary btn-raise btn-block" value='Login'>
+                                        </form>
+                                        </div>
+                                       </div> 
+                                    </div>
+                              </div>
+                            
+                        </div>
+                      </div>  
                     </div>
                 </div>
             </div>

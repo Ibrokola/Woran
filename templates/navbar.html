@@ -23,11 +23,6 @@
                         Categories
                     </a>
                 </li>
-                <li>
-                    <a href="">
-                        <i class="material-icons">unarchive</i> Upgrade your account
-                    </a>
-                </li>
 <!--                 <li>
                     <a href="" target="_blank" class="btn btn-simple btn-white btn-just-icon">
                         <i class="fa fa-twitter"></i>
@@ -50,10 +45,15 @@
                     </a>
                 </li>
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle notification-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>
+                  <a href="#" class="dropdown-toggle notification-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span aria-hidden="true"><i class="material-icons">add_alert</i></span></a>
+                  <!-- <span class="caret"></span> -->
                   <ul class="dropdown-menu" id='notification_dropdown'>
-
                   </ul>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="material-icons">unarchive</i> Upgrade your account
+                    </a>
                 </li>
 <!--                 <li>
                     <a class="notification-toggle" href="#">Notifications</a>
@@ -64,16 +64,19 @@
                     </a>
                 </li>
                 {% else %}
-                 <li>
-                    <a href="{% url 'account_login' %}">
-                        Login
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'account_signup' %}">
-                        Register
-                    </a>
-                </li>
+                    {% if request.get_full_path == "/" %}
+                    {% else %}
+                     <li>
+                        <a href="{% url 'account_login' %}">
+                            Login
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'account_signup' %}">
+                            Register
+                        </a>
+                    </li>
+                    {% endif %}
                 {% endif %}
             </ul>
         </div>
