@@ -11,6 +11,7 @@ from .views import home
 from videos.views import video_detail, category_list, category_detail
 from comments.views import comment_thread, comment_create_view
 from notifications.views import all, read, get_notifications_ajax
+from billing.views import upgrade, billing_history
 
 
 
@@ -26,6 +27,8 @@ urlpatterns = [
     url(r'^notifications/$', all, name='notifications_all'),
     url(r'^notifications/ajax/$', get_notifications_ajax, name='get_notifications_ajax'),
     url(r'^notifications/read/(?P<id>\d+)/$', read, name='notifications_read'),
+    url(r'^upgrade/$', upgrade, name='account_upgrade'),
+    url(r'^billing/$', billing_history, name='billing_history'),
     url(r'^accounts/', include('allauth.urls')),
 ]
 

@@ -2,7 +2,11 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
-from django.db.models.signals import post_save	
+from django.db.models.signals import post_save
+from django.utils import timezone	
+from django.contrib.auth.signals import user_logged_in
+
+from billing.models import Membership
 from notifications.signals import notify
 
 
@@ -107,9 +111,20 @@ def new_user_reciever(sender, instance, created, *args, **kwargs):
 					verb='New user created.'
 					)
 
-
-
 post_save.connect(new_user_reciever, sender=MyUser)
+
+
+def user_logged_in_signal(sender, signal, request, user, **kwargs):
+	request.session.set_expiry(30000)
+	membership_obj, created = Membership.objects.get_or_create(user=user)
+	if created:
+		membership_obj.date_start = timezone.now()
+		membership_obj.save()
+		user.is_member = True
+		user.save()
+	user.membership.update_status()
+
+user_logged_in.connect(user_logged_in_signal)
 
 
 class UserProfile(models.Model):

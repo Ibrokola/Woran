@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.template.defaultfilters import truncatechars
 
 from accounts.models import MyUser
 from videos.models import Video
@@ -11,6 +12,9 @@ class CommentManager(models.Manager):
 
 	def all(self):
 		return super(CommentManager, self).filter(active=True).filter(parent=None)
+
+	def recent(self):
+		return self.get_queryset().filter(active=True).filter(parent=None)[:6]
 
 	def create_comment(self, user=None, text=None, path=None, video=None, parent=None):
 		if not path:
@@ -55,6 +59,10 @@ class Comment(models.Model):
 	def get_absolute_url(self):
 		return reverse('comment_thread', kwargs={"id": self.id})
 
+
+	@property
+	def get_preview(self):
+		return truncatechars(self.text, 50)
 
 	@property
 	def get_comment(self):

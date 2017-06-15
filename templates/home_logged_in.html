@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to | {% endblock %}
+
+{% load i18n %}
+
+{% load crispy_forms_tags %}
+
+{% load account socialaccount %}
+
+{% block content %}
+
+<!-- <div style="padding-top: 5px;"></div> -->
+<div class="header-filter jumbotron" style="background-image: url('https://images.unsplash.com/photo-1423655156442-ccc11daa4e99?crop=entropy&dpr=2&fit=crop&fm=jpg&h=750&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1450');">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h1 class="title text-center">Enjoy</h1>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<div class="main main-raised">
+    <div class="section section-landing">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <!-- <h2 class="title">Recent videos</h2> -->
+                    <!-- <h5 class="description">{{ videos }}</h5> -->
+                </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-5">
+               <div class="row">
+                {% if recent_videos %}
+                <div class="col-sm-12">
+                    <h2 class="h2-responsive">Recent videos</h2>
+                    {% for vid in recent_videos %}
+                        {% if forloop.counter == 1 %}
+                        <a href="{{ vid.get_absolute_url }}"><img src="{{ vid.category.get_image_url}}" class="img-responsive img-raised"></a><br>
+                        {% endif %}
+                        <a href="{{ vid.get_absolute_url }}">{{ vid.title }}</a><br>
+                    {% endfor %}
+                    <hr>
+                </div>
+                {% endif %}
+
+                {% if popular_videos %}
+                <div class="col-sm-12">
+                <h2 class="h2-responsive">Popular videos</h2>
+                    {% for vid in popular_videos %}
+                        {% if forloop.counter == 1 %}
+                        <a href="{{ vid.get_absolute_url }}"><img src="{{ vid.category.get_image_url}}" class="img-responsive img-raised"></a><br>
+                        {% endif %}
+                        <a href="{{ vid.get_absolute_url }}">{{ vid.title }}</a><br>
+                    {% endfor %}
+                    <hr>
+                </div>
+                {% endif %}
+                </div>
+            </div>
+            <div class="col-sm-7">
+                {% if recent_comments %}
+                
+                    <h3 class="h3-responsive text-center">Recent comments on some videos</h3>
+                    <table class="table">
+                        {% for comment in recent_comments %}
+                            <tr><td>{{ comment.get_preview }}<br><small>by {{ comment.user }} | {{ comment.timestamp|timesince }} ago</small></td><td><a href="{{ comment.get_absolute_url }}">View</a></td></tr>
+                        {% endfor %}
+                    </table>
+                
+                {% endif %}
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

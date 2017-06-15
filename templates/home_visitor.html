@@ -82,15 +82,26 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
+                    <div class="col-md-4">
                         <!-- <div class="row"> -->
-                        {% for vid in videos %}
-                            <div class="col-md-3">
+                        {# for vid in videos #}
+                       <!--      <div class="col-md-3">
                                 <p>{{ vid.embed_code|safe }}</p>
-                                <!-- <br> -->
+                                <br>
                                 <a href="{{ vid.get_absolute_url }}">{{ vid.title }}</a>  
-                            </div>
+                            </div> -->
+                        {# endfor #}
+                        <!-- <div class="row"> -->
+                        {% if recent_videos %}
+                        {% for vid in recent_videos %}
+                        <!-- <div class="col-md-4"> -->
+                            <a href="{{ vid.get_absolute_url }}">{{ vid.title }}</a><br>
+                            <a href="{{ vid.get_absolute_url }}"><img src="{{ vid.category.get_image_url}}" class="img-responsive img-raised"></a><br>
+                        <!-- </div> -->
                         {% endfor %}
+                        {% endif %}
+                        <!-- </div> -->
+
                         <!-- </div> -->
                         <!-- <p> {{ video_embed|safe }} </p> -->
                     </div>
