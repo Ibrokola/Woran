@@ -54,6 +54,9 @@ class NotificationManager(models.Manager):
 		self.get_queryset().mark_targetless(user)
 		return self.get_queryset().get_user(user)
 
+	def get_recent_for_user(self, user, num):
+		return self.get_queryset().get_user(user)[:num]
+
 
 class Notification(models.Model):
 	sender_content_type = models.ForeignKey(ContentType, related_name='notify_sender')
@@ -128,7 +131,7 @@ def new_notification(sender, **kwargs):
 	recipient = kwargs.pop("recipient")
 	verb = kwargs.pop("verb")
 	# verb = kwargs
-	affected_users = kwargs.pop('affected_users')
+	affected_users = kwargs.pop('affected_users', None)
 	# target = kwargs.pop("target", None)
 	# action = kwargs.pop("action", None)
 	# print("affected users are")

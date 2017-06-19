@@ -56,6 +56,8 @@ $('.reply_btn').click(function(e){
     <div class="main main-raised">
         <div class="container">
             <div class="section">
+            <div class="col-sm-12"><h2>{{ obj.title }}</h2></div>
+            <hr>
                 <div class="row">
                     <div class="col-md-12" id="main_video">
                         {{ obj.embed_code|safe }}

@@ -8,6 +8,26 @@
 
 {% load account socialaccount %}
 
+
+
+<script>
+{% block jquery %}
+    braintree.setup("{{ client_token }}", "dropin", {
+        container: "checkout",
+        form: "checkoutForm"
+    });
+
+$('#submitPayment').on("click", function(){
+    var btn = $(this).button("loading")
+    setTimeout(function(){
+        btn.button('reset');
+    }, 4000)
+})
+
+{% endblock %}
+</script>
+
+
 {% block content %}
 
 <!-- <div style="padding-top: 5px;"></div> -->
@@ -24,9 +44,19 @@
 <div class="main main-raised">
     <div class="section section-landing">
         <div class="container">
-        <div class="col-sm-8 col-sm-offset-2 text-center">
-            <h3>Upgrade your account today!</h3>
-        </div>
+            <div class="col-sm-8 col-sm-offset-2 text-center" style="padding-top: 20px;">
+                <h2>Upgrade your account today</h2>
+            </div>
+            <div class="col-sm-8 col-sm-offset-2 text-center" style="padding-top: 20px;">
+                <h3>For just $5/month get unlimited access </h3>
+            </div>
+                <div class="col-sm-4 col-sm-offset-4" style="padding-top: 20px;">
+                    <form id='checkoutForm' method='POST' action=".">{% csrf_token %}
+                        <div id='checkout' style="min-height: 350px;"></div>
+                        <input id='submitPayment' type="submit" data-loading-text="Completing..." class="btn btn-primary btn-block" value='Complete Upgrade' autocomplete="off">
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>

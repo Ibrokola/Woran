@@ -12,7 +12,7 @@ from comments.models import Comment
 from analytics.signals import page_view
 
 from analytics.models import PageView
-from videos.models import Video
+from videos.models import Video, Category
 from django.db.models import Count 
 
 
@@ -51,12 +51,16 @@ def home(request):
 			}
 		template = 'home_logged_in.html'
 	else:
+		featured_categories = Category.objects.get_featured()
+		featured_videos = Video.objects.get_featured()
 		signup_form = SignupForm()
 		login_form = LoginForm()
 		template = 'home_visitor.html'
 		context = {
 			"signup_form": signup_form,
 			"login_form":login_form,
+			"featured_categories": featured_categories,
+			"featured_videos": featured_videos
 		}
 	return render(request, template, context)
 

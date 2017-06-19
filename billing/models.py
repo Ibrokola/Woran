@@ -3,8 +3,19 @@ import random
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import post_save
+
 from .signals import membership_dates_update
+from .utils import update_braintree_membership, check_membership_status
+
+def user_logged_in_receiver(sender, user, **kwargs):
+	try:
+		update_braintree_membership(user)
+	except:
+		pass
+
+user_logged_in.connect(user_logged_in_receiver)
 
 class Membership(models.Model):
 	user = models.OneToOneField(settings.AUTH_USER_MODEL)
@@ -33,7 +44,7 @@ post_save.connect(update_membership_satus, sender=Membership)
 
 def update_membership_dates(sender, new_date_start, **kwargs):
 	membership = sender
-	user = membership.user
+	# user = membership.user
 	current_date_end = membership.date_end 
 	if current_date_end >= new_date_start:
 		membership.date_end = current_date_end + datetime.timedelta(days=30, hours=10)
@@ -45,6 +56,10 @@ def update_membership_dates(sender, new_date_start, **kwargs):
 	# membership.update_status()
 
 membership_dates_update.connect(update_membership_dates)
+
+
+
+
 
 class TransactionManager(models.Manager):
 	def create_new(self, user, transaction_id, amount, card_type, success=None, transaction_status=None, last_four=None):
@@ -62,7 +77,8 @@ class TransactionManager(models.Manager):
 		)
 
 		if success is not None:
-			new_trans.trans.success = success
+			# new_trans.trans.success = success
+			new_trans.success = success
 			new_trans.transaction_status = transaction_status
 
 		if last_four is not None:
@@ -71,6 +87,11 @@ class TransactionManager(models.Manager):
 		new_trans.save(using=self._db)	
 		return new_trans
 
+	def all_for_user(self, user):
+		return super(TransactionManager, self).filter(user=user)
+
+	def get_recent_for_user(self, user, num):
+		return super(TransactionManager, self).filter(user=user)[:num]
 
 class Transaction(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL)
@@ -90,3 +111,15 @@ class Transaction(models.Model):
 
 	class Meta:
 		ordering = ['-timestamp']
+
+
+class UserMerchantId(models.Model):
+	user = models.OneToOneField(settings.AUTH_USER_MODEL)
+	customer_id = models.CharField(max_length=120)
+	subscription_id = models.CharField(max_length=120, null=True, blank=True)
+	plan_id = models.CharField(max_length=120, null=True, blank=True)
+	merchant_name = models.CharField(max_length=120, default="Braintree")
+
+
+	def __str__(self):
+		return self.customer_id

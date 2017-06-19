@@ -14,13 +14,13 @@
         <div class="collapse navbar-collapse" id="navigation-example">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="">
+                    <!-- <a href="">
                         Free Videos
-                    </a>
+                    </a> -->
                 </li>
                 <li>
                     <a href="{% url 'category_list' %}">
-                        Categories
+                        Movies
                     </a>
                 </li>
 <!--                 <li>
@@ -51,13 +51,13 @@
                   </ul>
                 </li>
                 <li>
-                    <a href="">
-                        <i class="material-icons">unarchive</i> Upgrade your account
+                    <a href="{% url 'account_upgrade' %}">
+                        <i class="material-icons">unarchive</i> Upgrade
                     </a>
                 </li>
-<!--                 <li>
-                    <a class="notification-toggle" href="#">Notifications</a>
-                </li> -->
+                <li>
+                    <a class="" href="{% url 'account_home' %}">Account</a>
+                </li>
                  <li>
                     <a href="{% url 'account_logout' %}">
                         Logout

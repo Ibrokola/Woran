@@ -15,7 +15,7 @@ class VideoQuerySet(models.query.QuerySet):
 		return self.filter(active=True)
 
 	def featured(self):
-		return self.filter(active=True)
+		return self.filter(featured=True)
 
 	def has_embed(self):
 		return self.filter(embed_code__isnull=False).exclude(embed_code__exact="")
@@ -27,7 +27,7 @@ class VideoManager(models.Manager):
 
 	def get_featured(self):
 		# return super(VideoManager, self).filter(featured=True)
-		return self.get_queryset().active().featured()
+		return self.get_queryset().featured().active()
 
 	def all(self):
 		return self.get_queryset().active().has_embed()
@@ -126,7 +126,7 @@ class CategoryQuerySet(models.query.QuerySet):
 		return self.filter(active=True)
 
 	def featured(self):
-		return self.filter(active=True)
+		return self.filter(featured=True)
 
 
 

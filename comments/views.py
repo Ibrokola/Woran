@@ -1,4 +1,4 @@
-from django.shortcuts import render, Http404, HttpResponseRedirect
+from django.shortcuts import render, Http404, HttpResponseRedirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -9,7 +9,7 @@ from .forms import CommentForm
 
 @login_required
 def comment_thread(request, id):
-	comment = Comment.objects.get(id=id)
+	comment = get_object_or_404(Comment, id=id)
 	form = CommentForm()
 	context = {
 		"form": form,
@@ -18,7 +18,7 @@ def comment_thread(request, id):
 	template = "comments/comment_thread.html"
 	return render(request, template, context)
 
-
+@login_required
 def comment_create_view(request):
 	if request.method == "POST" and request.user.is_authenticated():
 		parent_id = request.POST.get('parent_id')

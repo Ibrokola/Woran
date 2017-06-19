@@ -8,13 +8,19 @@
         <div class="container">
             <div class="section">
                 <div class="row">
-                    <div class="col-md-6">
-                        {% for item in queryset %}
-                        <a href="{{ item.get_absolute_url }}">{{ item }}</a><br>
-                        <a href="{{ item.get_absolute_url }}"><img src="{{ item.get_image_url }}" class="img-responsive img-raised"></a><br>
-                        {% endfor %}
-                        <!-- <p> {{ video_embed|safe }} </p> -->
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <h1>Movies</h1>
                     </div>
+                </div>
+
+                <div class="row"></div>
+                        {% for item in queryset %}
+                        <div class="col-sm-4">
+                        <a href="{{ item.get_absolute_url }}"><img src="{{ item.get_image_url }}" class="img-responsive img-raised"></a>
+                        <a href="{{ item.get_absolute_url }}" style="text-decoration: none;"><h4>{{ item }}</h4></a><br>
+                        </div>
+                          {% cycle '' '' '</div><div class="row">'%}
+                        {% endfor %}
                 </div>
             </div>
         </div>

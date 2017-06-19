@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings 
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
@@ -6,8 +7,18 @@ from django.db.models.signals import post_save
 from django.utils import timezone	
 from django.contrib.auth.signals import user_logged_in
 
-from billing.models import Membership
+from billing.models import Membership, UserMerchantId
 from notifications.signals import notify
+
+from decouple import config
+
+
+import braintree
+
+braintree.Configuration.configure(braintree.Environment.Sandbox,
+                                  merchant_id=config("merchant_id"),
+                                  public_key=config("public_key"),
+                                  private_key=config("private_key"))
 
 
 class MyUserManager(BaseUserManager):
@@ -104,13 +115,25 @@ class MyUser(AbstractBaseUser):
 def new_user_reciever(sender, instance, created, *args, **kwargs):
 	if created:
 		new_profile, is_created = UserProfile.objects.get_or_create(user=instance)
-		print(new_profile, is_created)
+		# print(new_profile, is_created)
 		notify.send(
 					instance, 
 					recipient=MyUser.objects.get(username='ibrobabs'), 
 					verb='New user created.'
 					)
-
+	try:
+		merchant_obj = UserMerchantId.objects.get(user=instance)
+	except:
+		new_customer_result = braintree.Customer.create({
+				"email": instance.email,
+			})
+		if new_customer_result.is_success:
+			merchant_obj, created = UserMerchantId.objects.get_or_create(user=instance)
+			merchant_obj.customer_id = new_customer_result.customer.id
+			merchant_obj.save()
+		else:
+			messages.error(request, "There was an error with your account. Please contact us.")
+			# return redirect("contact_us")
 post_save.connect(new_user_reciever, sender=MyUser)
 
 
