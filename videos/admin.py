@@ -18,8 +18,8 @@ class VideoInline(admin.TabularInline):
 class VideoAdmin(admin.ModelAdmin):
 	inlines = [TaggedItemInline]
 	list_filter = ['updated', 'timestamp']
+	list_display = ["title", 'updated', 'timestamp']
 	readonly_fields = ['updated', 'timestamp']
-	list_display = ("__str__", 'updated', 'timestamp')
 	fields = ['title', 'order', 'share_message', 'embed_code', 'active', 'slug', 'featured', 'free_preview', 'category']
 	search_fields = ['title']
 

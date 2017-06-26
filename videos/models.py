@@ -8,7 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from django.utils.text import slugify
 from .utils import get_vid_for_direction
-
+from series.utils import create_slug
 
 class VideoQuerySet(models.query.QuerySet):
 	def active(self):
@@ -62,7 +62,7 @@ class Video(models.Model):
 
 	def get_absolute_url(self):
 		# return "/videos/{slug_arg}/".format(slug_arg=self.slug)
-		return reverse('video_detail_slug', kwargs={"slug": self.slug})
+		return reverse('videos:detail', kwargs={"slug": self.slug})
 
 	# def get_absolute_url(self):
 	# 	return reverse('video_detail', kwargs={"vid_slug": self.slug, "cat_slug": self.category.slug})
@@ -103,7 +103,7 @@ class Video(models.Model):
 
 def video_pre_save_reciever(sender, instance, *args, **kwargs):
 	if not instance.slug:
-		instance.slug = slugify(instance.title)
+		instance.slug = create_slug(instance)
 
 pre_save.connect(video_pre_save_reciever, sender=Video)
 

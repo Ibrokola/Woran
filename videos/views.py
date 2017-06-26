@@ -23,6 +23,7 @@ from .mixins import MemberRequiredMixin, StaffMemberRequiredMixin
 class VideoCreateView(StaffMemberRequiredMixin, CreateView):
 	model = Video
 	form_class = VideoForm
+	# success_url = "/success/"
 
 class VideoDetailView(DetailView, MemberRequiredMixin):
 	queryset = Video.objects.all()

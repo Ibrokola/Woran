@@ -9,9 +9,9 @@ class MemberRequiredMixin(object):
 		obj = self.get_object()
 		user = request.user
 		if request.user.is_staff:
-			return super(MemeberRequiredMixin, self).dispatch(request, *args, **kwargs)
+			return super(MemberRequiredMixin, self).dispatch(request, *args, **kwargs)
 		if obj.free_preview:
-			return super(MemeberRequiredMixin, self).dispatch(request, *args, **kwargs)	
+			return super(MemberRequiredMixin, self).dispatch(request, *args, **kwargs)	
 		return HttpResponse("Join to Access all Movies")
 
 class StaffMemberRequiredMixin(object):
