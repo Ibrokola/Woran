@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{% endblock %}
+{% block title %}Movies | {{ block.super }}{% endblock %}
 
 {% block content %}
 <div  style="padding-top: 80px"></div>
@@ -23,13 +23,13 @@
             <div class="section section-landing">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
-                    {% if queryset %}
+                    {% if object_list %}
                     <table class="table">
                     <thead>
                         <th>Episode</th>
                         <th>Title</th>
                     </thead>
-                        {% for item in queryset %}
+                        {% for item in object_list %}
                             <tr><td>{{ forloop.counter }}</td><td>{% if request.user.is_authenticated or item.has_preview %} <a href="{{ item.get_absolute_url }}">{{ item }}</a>{% else %} {{ item }} {% endif %}</td></tr>
                         {% endfor %}
                     </table>

@@ -1,6 +1,6 @@
 import urllib.parse
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
@@ -46,8 +46,8 @@ class Video(models.Model):
 	slug = models.SlugField(blank=True, null=True)
 	free_preview = models.BooleanField(default=False)
 	category = models.ForeignKey("Category", default=1)
-	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
-	updated = models.DateTimeField(auto_now_add=False, auto_now=True, null=True)
+	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False) #time added
+	updated = models.DateTimeField(auto_now_add=False, auto_now=True) #last saved
 
 	objects = VideoManager()
 
@@ -61,7 +61,11 @@ class Video(models.Model):
 
 
 	def get_absolute_url(self):
-		return reverse('video_detail', kwargs={"vid_slug": self.slug, "cat_slug": self.category.slug})
+		# return "/videos/{slug_arg}/".format(slug_arg=self.slug)
+		return reverse('video_detail_slug', kwargs={"slug": self.slug})
+
+	# def get_absolute_url(self):
+	# 	return reverse('video_detail', kwargs={"vid_slug": self.slug, "cat_slug": self.category.slug})
 
 
 	def get_share_message(self):
@@ -92,30 +96,45 @@ class Video(models.Model):
 
 
 
-	
 
-def video_post_save_reciever(sender, instance, created, *args, **kwargs):
-	print('signal sent')
-	if created:
-		slug_title = slugify(instance.title)
-		new_slug = "%s %s %s" %(instance.title, instance.category.slug, instance.id)
-		try: 
-			obj_exists = Video.objects.get(slug=slug_title, category=instance.category)
-			instance.slug = slugify(new_slug)
-			instance.save()
-			print('model exists, new slug generated')
-		except Video.DoesNotExist:
-			instance.slug = slug_title
-			instance.save()
-			print('slug and model created')
-		except Video.MultipleObjectsReturned:
-			instance.slug = slugify(new_slug)
-			instance.save()
-			print('multiple models exists, new slug generated')
-		except:
-			pass
+###
+### Video slug pre-save signal
+###
+
+def video_pre_save_reciever(sender, instance, *args, **kwargs):
+	if not instance.slug:
+		instance.slug = slugify(instance.title)
+
+pre_save.connect(video_pre_save_reciever, sender=Video)
+
+
+	
+###
+### Video slug post-save signal
+###
+
+# def video_post_save_reciever(sender, instance, created, *args, **kwargs):
+# 	print('signal sent')
+# 	if created:
+# 		slug_title = slugify(instance.title)
+# 		new_slug = "%s %s %s" %(instance.title, instance.category.slug, instance.id)
+# 		try: 
+# 			obj_exists = Video.objects.get(slug=slug_title, category=instance.category)
+# 			instance.slug = slugify(new_slug)
+# 			instance.save()
+# 			print('model exists, new slug generated')
+# 		except Video.DoesNotExist:
+# 			instance.slug = slug_title
+# 			instance.save()
+# 			print('slug and model created')
+# 		except Video.MultipleObjectsReturned:
+# 			instance.slug = slugify(new_slug)
+# 			instance.save()
+# 			print('multiple models exists, new slug generated')
+# 		except:
+# 			pass
 		
-post_save.connect(video_post_save_reciever, sender=Video)
+# post_save.connect(video_post_save_reciever, sender=Video)
 
 
 

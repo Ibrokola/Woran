@@ -56,15 +56,15 @@ $('.reply_btn').click(function(e){
     <div class="main main-raised">
         <div class="container">
             <div class="section">
-            <div class="col-sm-12"><h2>{{ obj.title }}</h2></div>
+            <div class="col-sm-12"><h2>{{ object.title }}</h2></div>
             <hr>
                 <div class="row">
                     <div class="col-md-12" id="main_video">
-                        {{ obj.embed_code|safe }}
+                        {{ object.embed_code|safe }}
                     </div>
-                    {% if obj.tags %}
+                    {% if object.tags %}
                     <div class="col-sm-12">
-                        {% for tag in obj.tags.all %}
+                        {% for tag in object.tags.all %}
                         <ul>
                             <li>{{ tag }}</li>
                         </ul>
@@ -77,55 +77,55 @@ $('.reply_btn').click(function(e){
                         <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ obj.get_share_link }}&title={{ obj.get_share_message|safe }}&summary={{ obj.get_share_message|safe }}&source={{ obj.get_share_link }}"><i class="fa fa-linkedin-square fa-3x" aria-hidden="true"></i></a>
                         <!-- {{ obj.get_share_message|safe }}     -->
                             <!-- <p> {{ video_embed|safe }} </p> -->
-                    {% if obj.get_previous_url %}
+                    {% if object.get_previous_url %}
                     <a href="{{ obj.get_previous_url }}">Prev</a>
                     {% endif %}
-                    {% if obj.get_next_url %}
+                    {% if object.get_next_url %}
                     <a href="{{ obj.get_next_url }}">Next</a>
                     {% endif %}
 
                     <br>
                     <hr>
-                    <div class="row">
+<!--                     <div class="row">
                         <div class="col-md-12">
                         <h2>Comments</h2>
-                        <form method="POST" action="{% url 'comment_create' %}"> {% csrf_token %}
+                        <form method="POST" action="{# url 'comment_create' #}"> {# csrf_token #}
                         <input type="hidden" name="video_id" value="{{ obj.id }}">
                         <input type="hidden" name="origin_path" value="{{ request.get_full_path }}">
-                        {% crispy comment_form comment_form.helper %}
-                        <!-- <input class="btn btn-primary" type="submit" value="Add comment">     -->
-                        </form>
+                        {# crispy comment_form comment_form.helper #} -->
+                        <!-- <input class="btn btn-primary" type="submit" value="Add comment">     #do not uncomment--> 
+                   <!--      </form>
                         <br>
                         <br>
                         <table class="table">
-                            {% for comment in comments %}
+                            {# for comment in comments #}
                                 <tr>
                                     <td>{{ comment.get_comment }} 
                                     <br> 
                                     <small>by {{ comment.user }} | {{ comment.timestamp| timesince }} ago</small>
-                                    {% if not comment.is_child %}
+                                    {# if not comment.is_child #}
                                         <ul>
-                                            {% for child in comment.get_children %}
+                                            {# for child in comment.get_children #}
                                                 <p>{{ child.get_comment }} <small>by {{ child.user }} | {{ child.timestamp| timesince  }} ago</small></p>
-                                            {% endfor %}
+                                            {# endfor #}
                                         </ul>
                                         <a href="{{ comment.get_absolute_url }}">View Thread</a> | <a href="#" class="reply_btn">Reply</a> 
                                         <div class="reply_comment">
-                                            <form method="POST" action="{% url 'comment_create' %}"> {% csrf_token %}
+                                            <form method="POST" action="{% url 'comment_create' %}"> {# csrf_token #}
                                                 <input type="hidden" name="video_id" value="{% url 'comment_create' %}">
                                                 <input type="hidden" name="origin_path" value="{{ comment.get_origin }}">
                                                 <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                                                {% crispy comment_form comment_form.helper %}
-                                                <!-- <input class="btn btn-primary" type="submit" value="Add reply">     -->
+                                                {# crispy comment_form comment_form.helper #}
+                                                <!- <input class="btn btn-primary" type="submit" value="Add reply">     -->
                                             </form>
                                         </div>
-                                    {% endif %}
+                                    {# endif #}
                                     </td>
                                 </tr>
-                            {% endfor %}
+                            {# endfor #}
                         </table>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             </div>
         </div>
