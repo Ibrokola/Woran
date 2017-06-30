@@ -1,6 +1,8 @@
+import random
 from django.shortcuts import render, get_object_or_404
 
 # from .forms import VideoForm
+from django.db.models import Prefetch
 from django.http import Http404
 from videos.mixins import MemberRequiredMixin, StaffMemberRequiredMixin
 from django.views.generic import (
@@ -10,7 +12,7 @@ from django.views.generic import (
 		UpdateView,
 		DeleteView
 	)
-from .models import Series, Episode
+from .models import Series, Episode, MySeries
 from .forms import SeriesForm
 
 class SeriesCreateView(StaffMemberRequiredMixin, CreateView):
@@ -38,7 +40,7 @@ class EpisodeDetailView(MemberRequiredMixin, DetailView):
 
 # detail view for the video series
 class SeriesDetailView(MemberRequiredMixin, DetailView):
-	queryset = Series.objects.all()
+	# queryset = Series.objects.all()
 
 	# def get_object(self):
 	# 	abc = self.kwargs.get('slug')
@@ -48,22 +50,10 @@ class SeriesDetailView(MemberRequiredMixin, DetailView):
 	def get_object(self):
 		slug = self.kwargs.get('slug') #slug definition
 		# obj = Series.objects.get(slug=slug) # returns MultipleObjectsReturned error, don't do this
-		obj = Series.objects.filter(slug=slug) #returns a list of objects
+		obj = Series.objects.filter(slug=slug).watched(self.request.user) #returns a list of watched objects
 		if obj.exists():
 			return obj.first() # returns first instance of that list...
 		raise Http404
-
-		# or
-
-		# try:
-		# 	obj = Series.objects.get(slug=slug)
-		# except Series.MultipleObjectsReturned:     But seriously don't do this
-		# 	qs = Series.objects.filter(slug=slug)
-		# 	if qs.exists():
-		# 		obj = qs.frist()
-		# except:
-		# 	raise Http404
-		# return obj 
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(SeriesDetailView, self).get_context_data(*args, **kwargs)
@@ -79,14 +69,14 @@ class SeriesListView(ListView):
 		request = self.request
 		qs = Series.objects.all()
 		query = request.GET.get('q')
+		user = self.request.user
 		if query:
 			qs = qs.filter(title__icontains=query)
+		if user.is_authenticated():
+			qs = qs.watched(user)
+			print(qs)
 		return qs
 
-	# def get_context_data(self, *args, **kwargs):
-	# 	context = super(VideoListView, self).get_context_data(*args, **kwargs)
-	# 	print(context)
-	# 	return context
 
 
 class SeriesUpdateView(StaffMemberRequiredMixin, UpdateView):

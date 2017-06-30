@@ -159,7 +159,7 @@ class CategoryManager(models.Manager):
 
 	def all(self):
 		return self.get_queryset().active()
-
+		
 
 
 class Category(models.Model):

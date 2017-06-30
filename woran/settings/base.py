@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'notifications',
     'accounts',
     'series',
+    'categories',
 ]
 
 SITE_ID = 1

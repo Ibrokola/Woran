@@ -20,8 +20,10 @@ from accounts.views import account_home
 
 urlpatterns = [
     url(r'^babs/admin/', admin.site.urls),
+    url(r'^categories/', include('categories.urls', namespace='categories')),
     url(r'^series/', include('series.urls', namespace='series')),
     url(r'^videos/', include('videos.urls', namespace='videos')),
+
     # url(r'^home/$', TemplateView.as_view(template_name="home.html"), name='home'),
 
     url(r'^contact/$', TemplateView.as_view(template_name='company/contact_us.html'), name='contact_us'),

@@ -30,7 +30,10 @@
                         <th>Title</th>
                     </thead>
                         {% for item in object_list %}
-                            <tr><td>{{ forloop.counter }}</td><td>{% if request.user.is_authenticated or item.has_preview %} <a href="{{ item.get_absolute_url }}">{{ item }}</a>{% else %} {{ item }} {% endif %}</td></tr>
+                            <tr><td>{{ forloop.counter }}</td><td>{% if request.user.is_authenticated or item.has_preview %} <a href="{{ item.get_absolute_url }}">{{ item }}</a>{% else %} {{ item }} {% endif %} <small>{{ item.episode_set.count }} episodes</small>
+                            {% if item.is_watcher %} Watched
+                            {% endif %}
+                            </td></tr>
                         {% endfor %}
                     </table>
                         <!-- <p> {{ video_embed|safe }} </p> -->

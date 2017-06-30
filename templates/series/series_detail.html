@@ -86,22 +86,33 @@ $('.reply_btn').click(function(e){
                     <br>
                     <hr>
                     <div class="row">
-                        <div class="col-md-8 col-md-offset-2">
+                        <div class="col-sm-8">
+                            <p>{{ object.description }}</p>
+                            <br>
+                            {% if not object.is_watcher %}
+                                Yet to watch
+                            {% endif %}
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
                             <table class="table">
                             <thead>
-                                <th>Series</th>
+                                <th>Episode</th>
                                 <th>Title</th>
                             </thead>
-                                {% for item in object_list %}
+                                {% for item in object.episode_set.all %}
                                     <tr><td>{{ forloop.counter }}</td><td>{% if request.user.is_authenticated or item.has_preview %} <a href="{{ item.get_absolute_url }}">{{ item }}</a>{% else %} {{ item }} {% endif %}</td></tr>
+
+                                    {% empty %}
+                                    <h3 class="text-center">Coming soon!</h3>
                                 {% endfor %}
                             </table>
                         </div>
                     </div>
                         <!-- <p> {{ video_embed|safe }} </p> -->
-                    {% else %}
 
-                    <h3 class="text-center">Coming soon!</h3>
 <!--                     <div class="row">
                         <div class="col-md-12">
                         <h2>Comments</h2>

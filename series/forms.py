@@ -1,6 +1,34 @@
 from django import forms
 
-from .models import Series
+from videos.models import Video
+from .models import Series, Episode
+
+
+
+class EpisodeAdminForm(forms.ModelForm):
+    class Meta:
+        model = Episode
+        fields = [
+            'order',
+            'video',
+            'title',
+            'slug',
+            'description',
+            'share_message'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(EpisodeAdminForm, self).__init__(*args, **kwargs)
+        obj = kwargs.get("instance")
+        qs = Video.objects.filter(episode__isnull=True)
+        if obj:
+            if obj.video:
+                this_ = Video.objects.filter(pk=obj.video.pk)
+                qs = (qs | this_)
+            self.fields['video'].queryset = qs
+        else:
+            self.fields['video'].queryset = qs
+
 
 
 

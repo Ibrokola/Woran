@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+    <div  style="padding-top: 150px"></div>
+    <div class="main main-raised">
+        <div class="container">
+            <div class="section">
+                <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <h1>Movies</h1>
+                    </div>
+                </div>
+
+                <!-- <div class="row"></div> -->
+                    <div class="col-sm-4" style="padding-bottom: 40px;">
+                        <div class="list-group">
+                        {% for item in object_list %}
+                            <a href="{{ item.get_absolute_url }}" class="list-group-item">{{ item.title }}
+                            {{ item.primary_category.all.count }} Series
+                            </a>
+
+                            {% if forloop.counter|divisibleby:5 %}
+                                </div></div><div class="col-sm-4"><div class="list-group">
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    </div>  
+                <!-- </div> -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+<!-- <a href="{{ item.get_absolute_url }}"><img src="{{ item.get_image_url }}" class="img-responsive img-raised"></a>
+<a href="{{ item.get_absolute_url }}" style="text-decoration: none;"><h4>{{ item }}</h4></a><br> -->
+
+<!-- {# cycle '' '' '</div><div class="row">'#} -->
