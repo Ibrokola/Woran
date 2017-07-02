@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load search_form %}
+
+{% block title %}Series | {{ block.super }}{% endblock %}
+
+{% block content %}
+<div  style="padding-top: 80px"></div>
+<div class="container-fluid">
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>{{ object_list.title }}</h1>
+            </div>
+            <div class="col-sm-6">
+                <img src="{{ obj.get_image_url }}" class="img-responsive img-raised">
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+    <div class="main main-raised">
+        <div class="container">
+            <div class="section section-landing">
+                <div class="row">
+                    <div class="col-sm-4 col-sm-offset-4">
+                        {# search_form request #}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <h2>Search {% if request.GET.q %}<small>Results for {{ request.GET.q }}</small>{% endif %}</h2>
+                        {% for item in qs %}
+                            <a href="{{ item.get_absolute_url }}">{{ item.id }} - {{ item.title }}</a><br>
+                        {% endfor %}
+                        {% for item in c_qs %}
+                            <a href="{{ item.get_absolute_url }}">{{ item.id }} - {{ item.title }}</a><br>
+                        {% endfor %}
+                        {% for item in e_qs %}
+                            <a href="{{ item.get_absolute_url }}">{{ item.id }} - {{ item.title }}</a><br>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>            
+
+
+{% endblock %}

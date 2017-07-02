@@ -14,7 +14,8 @@ from comments.models import Comment
 from analytics.signals import page_view
 
 from analytics.models import PageView
-from videos.models import Video, Category
+from videos.models import Video
+from categories.models import Category 
 from django.db.models import Count 
 
 

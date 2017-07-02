@@ -1,0 +1,6 @@
+<form method='GET' action="{% url 'search:default' %}" class="navbar-form navbar-left">
+	<div class="form-group">
+    <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Search...">
+    <!-- <button class="btn btn-default" type="submit">Search</button> -->
+    </div>
+</form>

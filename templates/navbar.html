@@ -1,3 +1,4 @@
+{% load search_form %}
 <nav class="navbar navbar-transparent navbar-absolute">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -18,11 +19,11 @@
                         Free Videos
                     </a> -->
                 </li>
-                <li>
+                <!-- <li>
                     <a href="{# url 'category_list' #}">
                         Movies
                     </a>
-                </li>
+                </li> -->
 <!--                 <li>
                     <a href="" target="_blank" class="btn btn-simple btn-white btn-just-icon">
                         <i class="fa fa-twitter"></i>
@@ -40,9 +41,18 @@
                 </li> -->
                 {% if request.user.is_authenticated %}
                 <li>
+                    {% search_form request %}
+                </li>
+                <li>
                     <a href="">
                         {{ user }}
                     </a>
+                </li>
+                <li>
+                    <a class="" href="{% url 'series:list' %}">Tv - Series/Movies</a>
+                </li>
+                <li>
+                    <a class="" href="{% url 'categories:list' %}">Categories</a>
                 </li>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle notification-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span aria-hidden="true"><i class="material-icons">add_alert</i></span></a>

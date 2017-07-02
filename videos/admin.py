@@ -1,13 +1,13 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
-from .models import Video, Category, TaggedItem
+from .models import Video
 
 
 
 
 
-class TaggedItemInline(GenericTabularInline):
-	model = TaggedItem
+# class TaggedItemInline(GenericTabularInline):
+# 	model = TaggedItem
 
 
 class VideoInline(admin.TabularInline):
@@ -16,25 +16,25 @@ class VideoInline(admin.TabularInline):
 
 
 class VideoAdmin(admin.ModelAdmin):
-	inlines = [TaggedItemInline]
+	# inlines = [TaggedItemInline]
 	list_filter = ['updated', 'timestamp']
 	list_display = ["title", 'updated', 'timestamp']
 	readonly_fields = ['updated', 'timestamp']
-	fields = ['title', 'order', 'share_message', 'embed_code', 'active', 'slug', 'featured', 'free_preview', 'category']
+	fields = ['title', 'slug', 'order', 'share_message', 'embed_code', 'active', 'featured', 'free_preview']
 	search_fields = ['title']
 
 	class Meta:
 		model = Video
 
 
-class CategoryAdmin(admin.ModelAdmin):
-	inlines = [VideoInline, TaggedItemInline]
-	class Meta:
-		model = Category
+# class CategoryAdmin(admin.ModelAdmin):
+# 	inlines = [VideoInline]
+# 	class Meta:
+# 		model = Category
 
 
 
 admin.site.register(Video, VideoAdmin)
-admin.site.register(Category, CategoryAdmin)
+# admin.site.register(Category, CategoryAdmin)
 
-admin.site.register(TaggedItem)
+# admin.site.register(TaggedItem)

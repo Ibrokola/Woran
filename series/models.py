@@ -47,13 +47,19 @@ class SeriesQuerySet(models.query.QuerySet):
 	def active(self):
 		return self.filter(active=True)
 
+	def episodes(self):
+		return self.prefetch_related('episode_set')
+
+
 	def watched(self, user):
-		return self.prefetch_related(
-					Prefetch('watched',
-							queryset=MySeries.objects.filter(user=user),
-							to_attr='is_watcher'
+		if user.is_authenticated():
+			return self.prefetch_related(
+						Prefetch('watched',
+								queryset=MySeries.objects.filter(user=user),
+								to_attr='is_watcher'
+						)
 					)
-				)
+		return self
 
 class SeriesManager(models.Manager):
 	def get_queryset(self):
@@ -63,13 +69,24 @@ class SeriesManager(models.Manager):
 		return self.get_queryset().all().active()
 		# return super(SeriesManager, self).all()
 
-
+def handle_upload(instance, filename):
+	if instance.slug:
+		return "%s/images/%s" %(instance.slug, filename)
+	return "unknown/images/%s" %(filename)
 
 class Series(models.Model):
 	title = models.CharField(max_length=120)
-	slug = models.SlugField(blank=True, null=True)
+	slug = models.SlugField(blank=True, null=True)	
+	image = models.ImageField(upload_to=handle_upload,
+	 		height_field='image_height',
+			width_field='image_width',
+			null=True
+			)
+	image_height = models.IntegerField(blank=True, null=True)
+	image_width = models.IntegerField(blank=True, null=True)
 	# category = models.CharField(max_length=120, choices=POS_CHOICES, default='main')
 	category      = models.ForeignKey(Category, related_name='primary_category', null=True, blank=True)
+	secondary = models.ManyToManyField(Category, related_name='secondary_category', blank=True)
 	order = PositionField(collection='category')
 	share_message = models.CharField(max_length=250, default=DEFAULT_MESSAGE)
 	description = models.TextField()
@@ -87,6 +104,11 @@ class Series(models.Model):
 	def get_absolute_url(self):
 		return reverse("series:detail", kwargs={"slug": self.slug})
 
+def post_save_series_receiver(sender, instance, created, *args, **kwargs):
+	if not instance.category in instance.secondary.all():
+		instance.secondary.add(instance.category)
+
+post_save.connect(post_save_series_receiver, sender=Series)
 
 
 class Episode(models.Model):
@@ -100,7 +122,7 @@ class Episode(models.Model):
 	description = models.TextField(blank=True)
 	# active = models.BooleanField(default=True)
 	# featured = models.BooleanField(default=False)
-	# free_preview = models.BooleanField(default=False)
+	free_preview = models.BooleanField(default=False)
 	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False) #time added
 	updated = models.DateTimeField(auto_now_add=False, auto_now=True) #last saved
 
@@ -119,6 +141,12 @@ class Episode(models.Model):
 					"ep_slug": self.slug
 				}
 			)
+
+	@property
+	def has_preview(self):
+		if self.free_preview:
+			return True
+		return False
 
 
 

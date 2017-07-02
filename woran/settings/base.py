@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'accounts',
     'series',
     'categories',
+    'search',
 ]
 
 SITE_ID = 1

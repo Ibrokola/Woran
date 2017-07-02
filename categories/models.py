@@ -1,9 +1,10 @@
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.core.urlresolvers import reverse
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Count
 from series.utils import create_slug
 
+from videos.models import Video
 from series.fields import PositionField
 
 
@@ -28,7 +29,10 @@ class CategoryManager(models.Manager):
 		return self.get_queryset().active().featured()
 
 	def all(self):
-		return self.get_queryset().all().active().prefetch_related('primary_category')
+		return self.get_queryset().all(
+			).active().annotate(
+			series_length= Count("secondary_category", distinct=True)
+			).prefetch_related('primary_category', 'secondary_category')
 		
 
 
@@ -37,6 +41,7 @@ class Category(models.Model):
 	title = models.CharField(max_length=120)
 	slug = models.SlugField(unique=True, blank=True)
 	order = PositionField(blank=True)
+	video = models.ForeignKey(Video, null=True, blank=True)
 	description = models.TextField(max_length=5000, null=True, blank=True)
 	# tags = GenericRelation("TaggedItem", null=True, blank=True)
 	# image = models.ImageField(upload_to='images/', null=True, blank=True)

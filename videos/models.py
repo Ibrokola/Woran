@@ -1,14 +1,19 @@
 import urllib.parse
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import post_save, pre_save
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
-
 from django.utils.text import slugify
+
+# from series.models import Episode
+# from categories.models import Category
+
 from .utils import get_vid_for_direction
 from series.utils import create_slug
+
 
 class VideoQuerySet(models.query.QuerySet):
 	def active(self):
@@ -19,6 +24,9 @@ class VideoQuerySet(models.query.QuerySet):
 
 	def has_embed(self):
 		return self.filter(embed_code__isnull=False).exclude(embed_code__exact="")
+
+	def unused(self):
+		return self.filter(Q(episode__isnull=True)&Q(category__isnull=True))
 
 
 class VideoManager(models.Manager):
@@ -37,22 +45,22 @@ DEFAULT_MESSAGE = "check out this video"
 
 class Video(models.Model):
 	title = models.CharField(max_length=120)
-	embed_code = models.CharField(max_length=500, null=True, blank=True)
-	share_message = models.TextField(default=DEFAULT_MESSAGE)
+	slug = models.SlugField(blank=True, null=True)
+	embed_code = models.TextField(null=True)
+	share_message = models.CharField(max_length=500, default=DEFAULT_MESSAGE)
 	order = models.PositiveIntegerField(default=1)
-	tags = GenericRelation("TaggedItem", null=True, blank=True)
+	# tags = GenericRelation("TaggedItem", null=True, blank=True)
 	active = models.BooleanField(default=True)
 	featured = models.BooleanField(default=False)
-	slug = models.SlugField(blank=True, null=True)
 	free_preview = models.BooleanField(default=False)
-	category = models.ForeignKey("Category", default=1)
+	# category = models.ForeignKey("Category", default=1)
 	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False) #time added
 	updated = models.DateTimeField(auto_now_add=False, auto_now=True) #last saved
 
 	objects = VideoManager()
 
 	class Meta:
-		unique_together = ('slug', 'category')
+		# unique_together = ('slug', 'category')
 		ordering = ['order', '-timestamp']
 
 
@@ -140,69 +148,69 @@ pre_save.connect(video_pre_save_reciever, sender=Video)
 
 
 
-class CategoryQuerySet(models.query.QuerySet):
-	def active(self):
-		return self.filter(active=True)
+# class CategoryQuerySet(models.query.QuerySet):
+# 	def active(self):
+# 		return self.filter(active=True)
 
-	def featured(self):
-		return self.filter(featured=True)
+# 	def featured(self):
+# 		return self.filter(featured=True)
 
 
 
-class CategoryManager(models.Manager):
-	def get_queryset(self):
-		return CategoryQuerySet(self.model, using=self._db)
+# class CategoryManager(models.Manager):
+# 	def get_queryset(self):
+# 		return CategoryQuerySet(self.model, using=self._db)
 
-	def get_featured(self):
-		# return super(VideoManager, self).filter(featured=True)
-		return self.get_queryset().active().featured()
+# 	def get_featured(self):
+# 		# return super(VideoManager, self).filter(featured=True)
+# 		return self.get_queryset().active().featured()
 
-	def all(self):
-		return self.get_queryset().active()
+# 	def all(self):
+# 		return self.get_queryset().active()
 		
 
 
-class Category(models.Model):
-	title = models.CharField(max_length=120)
-	description = models.TextField(max_length=5000, null=True, blank=True)
-	tags = GenericRelation("TaggedItem", null=True, blank=True)
-	image = models.ImageField(upload_to='images/', null=True, blank=True)
-	slug = models.SlugField(default='abc', unique=True)
-	active = models.BooleanField(default=True)
-	featured = models.BooleanField(default=False)
-	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
-	updated = models.DateTimeField(auto_now_add=False, auto_now=True)
+# class Category(models.Model):
+# 	title = models.CharField(max_length=120)
+# 	description = models.TextField(max_length=5000, null=True, blank=True)
+# 	tags = GenericRelation("TaggedItem", null=True, blank=True)
+# 	image = models.ImageField(upload_to='images/', null=True, blank=True)
+# 	slug = models.SlugField(default='abc', unique=True)
+# 	active = models.BooleanField(default=True)
+# 	featured = models.BooleanField(default=False)
+# 	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
+# 	updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 
-	objects = CategoryManager()
+# 	objects = CategoryManager()
 
-	class Meta:
-		ordering = ['title', 'timestamp']
+# 	class Meta:
+# 		ordering = ['title', 'timestamp']
 
-	def __str__(self):
-		return self.title
+# 	def __str__(self):
+# 		return self.title
 
-	def get_absolute_url(self):
-		return reverse('category_detail', kwargs={"cat_slug": self.slug})
+# 	def get_absolute_url(self):
+# 		return reverse('category_detail', kwargs={"cat_slug": self.slug})
 
 
-	def get_image_url(self):
-		return "%s%s" %(settings.MEDIA_URL, self.image)
+# 	def get_image_url(self):
+# 		return "%s%s" %(settings.MEDIA_URL, self.image)
 		
 
-TAG_CHOICES = (
-		("ghanawood", "ghanawood"),
-		("nollywood", "nollywood"),
-		("music", "music"),
-		("entertainment", "entertainment"),
-	)
+# TAG_CHOICES = (
+# 		("ghanawood", "ghanawood"),
+# 		("nollywood", "nollywood"),
+# 		("music", "music"),
+# 		("entertainment", "entertainment"),
+# 	)
 
 
 
-class TaggedItem(models.Model):
-	tag = models.SlugField(choices=TAG_CHOICES)
-	content_type = models.ForeignKey(ContentType)
-	object_id = models.PositiveIntegerField()
-	content_object = GenericForeignKey()
+# class TaggedItem(models.Model):
+# 	tag = models.SlugField(choices=TAG_CHOICES)
+# 	content_type = models.ForeignKey(ContentType)
+# 	object_id = models.PositiveIntegerField()
+# 	content_object = GenericForeignKey()
 
-	def __str__(self):
-		return self.tag 
+# 	def __str__(self):
+# 		return self.tag 

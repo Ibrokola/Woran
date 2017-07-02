@@ -1,0 +1,18 @@
+<div class="col-sm-2">
+    {% if request.user.is_authenticated or item.has_preview %}
+        <a href="{{ series.get_absolute_url }}" class="thumbnail">
+        {% if series.image %}
+          <img src="{{ series.image.url }}" alt="" class="img-responsive img-fluid">
+        {% endif %}
+        </a>
+        
+        {% else %} 
+        <a class="thumbnail">
+        {% if series.image %}
+          <img src="{{ series.image.url }}" alt="" class="img-responsive img-fluid">
+        {% endif %}
+        </a>
+    {% endif %}
+        <h4 class="text-center">{{ series.title }} | <small>{{ item.episode_set.count }} episodes</small></h4>
+      <!--   {# if series.is_watcher #}<p class="text-center"> Watched </p>{# endif #} -->
+</div>

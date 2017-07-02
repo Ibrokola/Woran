@@ -13,14 +13,14 @@ class EpisodeAdminForm(forms.ModelForm):
             'video',
             'title',
             'slug',
+            'free_preview',
             'description',
-            'share_message'
         ]
 
     def __init__(self, *args, **kwargs):
         super(EpisodeAdminForm, self).__init__(*args, **kwargs)
         obj = kwargs.get("instance")
-        qs = Video.objects.filter(episode__isnull=True)
+        qs = Video.objects.all().unused()
         if obj:
             if obj.video:
                 this_ = Video.objects.filter(pk=obj.video.pk)

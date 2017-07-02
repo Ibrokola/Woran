@@ -20,6 +20,7 @@ from accounts.views import account_home
 
 urlpatterns = [
     url(r'^babs/admin/', admin.site.urls),
+    url(r'^search/', include('search.urls', namespace='search')),
     url(r'^categories/', include('categories.urls', namespace='categories')),
     url(r'^series/', include('series.urls', namespace='series')),
     url(r'^videos/', include('videos.urls', namespace='videos')),

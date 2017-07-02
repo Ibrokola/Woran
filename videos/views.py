@@ -11,7 +11,8 @@ from django.views.generic import (
 		UpdateView,
 		DeleteView
 	)
-from .models import Video, Category, TaggedItem
+from .models import Video
+from categories.models import Category
 from comments.models import Comment
 from comments.forms import CommentForm
 from analytics.signals import page_view
@@ -25,7 +26,7 @@ class VideoCreateView(StaffMemberRequiredMixin, CreateView):
 	form_class = VideoForm
 	# success_url = "/success/"
 
-class VideoDetailView(DetailView, MemberRequiredMixin):
+class VideoDetailView( MemberRequiredMixin, DetailView):
 	queryset = Video.objects.all()
 
 	# def get_object(self):
@@ -35,7 +36,6 @@ class VideoDetailView(DetailView, MemberRequiredMixin):
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(VideoDetailView, self).get_context_data(*args, **kwargs)
-		print(context)
 		return context
 
 

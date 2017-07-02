@@ -5,7 +5,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 
-from videos.models import Video, Category
+from videos.models import Video
+from categories.models import Category
 from .signals import page_view
 
 
@@ -16,7 +17,7 @@ class PageViewQuerySet(models.query.QuerySet):
 		return self.filter(primary_content_type=content_type)
 
 	def categories(self):
-		content_type = ContentType.objects.get_for_model(Catgory)
+		content_type = ContentType.objects.get_for_model(Category)
 		return self.filter(primary_content_type=content_type)
 
 

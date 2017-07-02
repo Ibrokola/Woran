@@ -9,7 +9,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6">
-                <h1>{{ obj.title }}</h1>
+                <h1>{{ object_list.title }}</h1>
             </div>
             <div class="col-sm-6">
                 <img src="{{ obj.get_image_url }}" class="img-responsive img-raised">
@@ -22,30 +22,56 @@
         <div class="container">
             <div class="section section-landing">
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
-                    {% if object_list %}
-                    <table class="table">
-                    <thead>
-                        <th>Series</th>
-                        <th>Title</th>
-                    </thead>
+                    <div class="col-sm-12">
+                    <div class="row">
+
+                    {# if object_list #}
                         {% for item in object_list %}
-                            <tr><td>{{ forloop.counter }}</td><td>{% if request.user.is_authenticated or item.has_preview %} <a href="{{ item.get_absolute_url }}">{{ item }}</a>{% else %} {{ item }} {% endif %} <small>{{ item.episode_set.count }} episodes</small>
-                            {% if item.is_watcher %} Watched
-                            {% endif %}
-                            </td></tr>
+                            {% include 'series/snippets/series_thumbnail_display.html' with series=item %}
+
+                        {% if forloop.counter|divisibleby:3 %}
+                            </div><div class="row">
+                        {% endif %}
+
+                        {% empty %}
+                            <h3 class="text-center">Coming soon!</h3>
                         {% endfor %}
-                    </table>
-                        <!-- <p> {{ video_embed|safe }} </p> -->
-                    {% else %}
+                    
+                    {# endif #}
+                    <!-- {# cycle '' '' '</div></div><div class="row"><div class="col-sm-4">' #} -->
+                    
+                <!-- </div> -->
+                    <div class="col-sm-12 text-center">
+                        {% if is_paginated %}
 
-                    <h3 class="text-center">Coming soon!</h3>
+                                {% if page_obj.has_previous %}
+                                    <a href="{% url 'series:list' %}?page={{ page_obj.previous_page_number }}">Previous</a>
+                                {% endif %} 
 
-                    {% endif %}
+                                    Page {{ page_obj.number }} of {{ paginator.num_pages }}
+
+                                {% if page_obj.has_next %}
+                                    <a href="{% url 'series:list' %}?page={{ page_obj.next_page_number }}">Next</a>
+                                {% endif %}
+                            
+                        {% endif %}
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
+
+<!-- <table class="table">
+<thead>
+    <th>Series</th>
+    <th>Title</th>
+</thead> -->
+
+<!-- <tr><td>{{ forloop.counter }}</td><td>{# if request.user.is_authenticated or item.has_preview #} <a href="{{ item.get_absolute_url }}">{{ item }}</a>{# else #} {{ item }} {# endif #} <small>{{ item.episode_set.count }} episodes</small>
+                            {# if item.is_watcher #} Watched
+                            {# endif #}
+                            </td></tr> -->
+
+<!-- </table> -->
+    <!-- <p> {{ video_embed|safe }} </p> -->
