@@ -13,7 +13,7 @@ from accounts.models import MyUser
 from comments.models import Comment
 from analytics.signals import page_view
 
-from analytics.models import PageView
+# from analytics.models import PageView
 from videos.models import Video
 from categories.models import Category 
 from django.db.models import Count 
@@ -28,35 +28,35 @@ from django.db.models import Count
 			
 class HomeView(View):
 	def get(self, request, *args, **kwargs):
-		page_view.send(
-		request.user,
-		page_path=request.get_full_path()
-		)
+		# page_view.send(
+		# request.user,
+		# page_path=request.get_full_path()
+		# )
 		if request.user.is_authenticated():
-			page_view_objs = request.user.pageview_set.get_videos()[:6]
-			recent_videos = []
-			for obj in page_view_objs:
-				if not obj.primary_object in recent_videos:
-					recent_videos.append(obj.primary_object)
+			# page_view_objs = request.user.pageview_set.get_videos()[:6]
+			# recent_videos = []
+			# for obj in page_view_objs:
+			# 	if not obj.primary_object in recent_videos:
+			# 		recent_videos.append(obj.primary_object)
 			recent_comments = Comment.objects.recent()
 
 			video_type = ContentType.objects.get_for_model(Video)
-			popular_videos_list = PageView.objects.filter(primary_content_type=video_type).values("primary_object_id").annotate(the_count=Count("primary_object_id")).order_by("-the_count")[:2]
+			# popular_videos_list = PageView.objects.filter(primary_content_type=video_type).values("primary_object_id").annotate(the_count=Count("primary_object_id")).order_by("-the_count")[:2]
 
-			popular_videos = []
-			for item in popular_videos_list:
-				try:
-					new_video = Video.objects.get(id=item['primary_object_id'])
-					popular_videos.append(new_video)
-				except:
-					pass
+			# popular_videos = []
+			# for item in popular_videos_list:
+			# 	try:
+			# 		new_video = Video.objects.get(id=item['primary_object_id'])
+			# 		popular_videos.append(new_video)
+			# 	except:
+			# 		pass
 
-			PageView.objects.filter(primary_content_type=video_type, primary_object_id=5).count()
+			# PageView.objects.filter(primary_content_type=video_type, primary_object_id=5).count()
 
 
 			context = {
-				"popular_videos":popular_videos,
-				"recent_videos":recent_videos,
+				# "popular_videos":popular_videos,
+				# "recent_videos":recent_videos,
 				"recent_comments":recent_comments
 				}
 			template = 'home_logged_in.html'
@@ -149,9 +149,9 @@ class HomeView(View):
 # 		return HttpResponseRedirect('accounts/login')
 
 
-def login(request):
-	template = 'home.html'
-	context = {
+# def login(request):
+# 	template = 'home.html'
+# 	context = {
 
-	}
-	return render(request, template, context)
+# 	}
+# 	return render(request, template, context)

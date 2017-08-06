@@ -41,17 +41,36 @@
                     <!-- {# cycle '' '' '</div></div><div class="row"><div class="col-sm-4">' #} -->
                     
                 <!-- </div> -->
+                <br>
+                <br>
                     <div class="col-sm-12 text-center">
                         {% if is_paginated %}
 
                                 {% if page_obj.has_previous %}
+                                    {% if page_obj.previous_page_number > 1 %}
+                                    <a href="{% url 'series:list' %}?page=1">First</a>
+                                    {% endif %}
+
+
                                     <a href="{% url 'series:list' %}?page={{ page_obj.previous_page_number }}">Previous</a>
+
+                                    {% if previous_page_number > 1 %}
+                                    <a href="{% url 'series:list' %}?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                                    {% endif %}
                                 {% endif %} 
 
-                                    Page {{ page_obj.number }} of {{ paginator.num_pages }}
+                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
 
                                 {% if page_obj.has_next %}
+                                    {% if page_obj.paginator.num_pages > page_obj.next_page_number %}
+                                    <a href="{% url 'series:list' %}?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                                    {% endif %}
+
                                     <a href="{% url 'series:list' %}?page={{ page_obj.next_page_number }}">Next</a>
+
+                                    {% if page_obj.paginator.num_pages > page_obj.next_page_number %}
+                                    <a href="{% url 'series:list' %}?page={{ page_obj.paginator.num_pages }}">Last</a>
+                                    {% endif %}
                                 {% endif %}
                             
                         {% endif %}
