@@ -30,7 +30,7 @@ class MySeries(models.Model):
 
 def post_save_user_create(sender, instance, created, *args, **kwargs):
 	if created:
-		MyCourses.objects.get_or_create(user=instance)
+		MySeries.objects.get_or_create(user=instance)
 
 post_save.connect(post_save_user_create, sender=settings.AUTH_USER_MODEL)
 
