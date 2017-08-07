@@ -62,7 +62,7 @@
                 <nav class="pull-left">
                     <ul>
                         <li>
-                            <a href="#">
+                            <a href="/">
                                 Woran
                             </a>
                         </li>
@@ -78,7 +78,7 @@
                         </li>
                         <li>
                             <a href="">
-                                Licenses
+                                <!-- Licenses -->
                             </a>
                         </li>
                     </ul>
@@ -128,7 +128,7 @@
                     success: function(data){
                         $("#notification_dropdown").html('<li class="dropdown-header"></li>');
                         var count = data.count
-                        console.log(count)
+                        //console.log(count)
                         if (count == 0){
                             var url = "{% url 'notifications_all' %}"
                             $("#notification_dropdown").append("<li><a href='" + url + "'>View All Notifications</a></li>")
