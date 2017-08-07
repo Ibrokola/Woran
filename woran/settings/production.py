@@ -16,7 +16,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['woran.herokuapp.com']
 
 FULL_DOMAIN_NAME = 'http://www.woran.com'
 # Application definition
