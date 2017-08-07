@@ -1,0 +1,1 @@
+web: gunicorn woran.wsgi --log-file -
