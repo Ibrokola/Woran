@@ -1,3 +1,4 @@
+{% load static %}
 {% load search_form %}
 <nav class="navbar navbar-transparent navbar-absolute">
     <div class="container">
@@ -10,7 +11,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="{% url 'home' %}">
-                <h5 style="font-family: 'Monoton', cursive;"><img src="{% static 'img/logo.png' %}" alt="Woran">Woran</h5>
+                <h5 style="font-family: 'Monoton', cursive;"><img src="{% static 'img/logo.png' %}" class="d-inline-block align-top" width="60" height="50" alt="Woran">Woran</h5>
             </a>
         </div>
 
